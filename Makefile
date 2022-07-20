@@ -53,7 +53,7 @@ builds: ${DEVELOPMENT} ${IRODS_SERVER} ${IRODS_CLIENT}
 	for os in ${BUILDERS}; \
 	do \
 		cd ${DEVELOPMENT} && docker build -f irods_core_builder.$$os.Dockerfile -t irods-core-builder-$$os .; \
-		ocker run --rm \
+		docker run --rm \
              		-v ${IRODS_SERVER}:/irods_source:ro \
              		-v ${IRODS_CLIENT}:/icommands_source:ro \
              		-v ${BUILD}/$$os/server:/irods_build \
