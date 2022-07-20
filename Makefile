@@ -23,8 +23,6 @@ help:
 	@echo
 	@echo "Will build into: ${BUILD} for distribution: ${DISTRIBUTION}"
 	@echo
-	@echo "Output will be produced into: ${BUILD}/${DISTRIBUTION}"
-	@echo
 	@echo "You can adjust distribution by setting environ variable 'DISTRIBUTION'"
 	@echo
 	@echo "For example:"
@@ -71,10 +69,5 @@ runners: ${DEVELOPMENT}
 	done;
 
 clean:
-	rm -rf ${SOURCE}
+	rm -rf ${TOP}/source
 	rm -rf ${TOP}/build
-
-
-#pam_interactive:
-#	https://github.com/stefan-wolfsheimer/irods_client_icommands.git
-#	git checkout https://github.com/stefan-wolfsheimer/irods_client_icommands/tree/4-3_pam_interactive
