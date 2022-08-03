@@ -45,10 +45,8 @@ ${IRODS_SERVER}:
 
 ${IRODS_CLIENT}:
 	mkdir -p ${IRODS_CLIENT}
-	@git clone https://github.com/stefan-wolfsheimer/irods_client_icommands ${IRODS_CLIENT}
-	cd ${IRODS_CLIENT}
-	@git checkout 4-3_pam_interactive
-
+	@git clone --branch 4-3_pam_interactive https://github.com/stefan-wolfsheimer/irods_client_icommands ${IRODS_CLIENT}
+	
 # Build builders & runners...
 
 builds: ${DEVELOPMENT} ${IRODS_SERVER} ${IRODS_CLIENT}
