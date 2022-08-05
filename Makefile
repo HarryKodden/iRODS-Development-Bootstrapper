@@ -14,6 +14,7 @@ BUILD = ${TOP}/build
 DEVELOPMENT = ${SOURCE}/development
 IRODS_SERVER = ${SOURCE}/irods_server
 IRODS_CLIENT = ${SOURCE}/irods_client
+IRODS_PAM_INTERACTIVE = ${SOURCE}/irods_pam_interactive
 
 all: help
 	echo Done !
@@ -46,8 +47,41 @@ ${IRODS_SERVER}:
 ${IRODS_CLIENT}:
 	mkdir -p ${IRODS_CLIENT}
 	@git clone --branch 4-3_pam_interactive https://github.com/stefan-wolfsheimer/irods_client_icommands ${IRODS_CLIENT}
-	
+
+${IRODS_PAM_INTERACTIVE}:
+	mkdir ${IRODS_PAM_INTERACTIVE}
+	@git clone https://github.com/stefan-wolfsheimer/irods_auth_pam_interactive.git ${IRODS_PAM_INTERACTIVE}
+
 # Build builders & runners...
+
+# todo use consortium builders to build plugin
+pam_interactive_plugin: ${IRODS_PAM_INTERACTIVE}
+	for os in ${BUILDERS}; \
+	do \
+		docker build \
+			-f ${IRODS_PAM_INTERACTIVE}/plugin_builder.ubuntu20.Dockerfile \
+			-t plugin-builder-$$os  \
+			${IRODS_PAM_INTERACTIVE}; \
+		docker run --rm \
+			 -w /irods_plugin_build \
+			 -v ${IRODS_PAM_INTERACTIVE}:/irods_plugin_source:ro \
+             -v ${BUILD}/$$os/irods_pam_interactive:/irods_plugin_build \
+             -v ${PACKAGES}:/irods_packages \
+			 -v ${BUILD}/$$os/packages:/irods_packages \
+             -e VERBOSE=1 \
+            plugin-builder-$$os \
+			/opt/irods-externals/cmake3.21.4-0/bin/cmake  /irods_plugin_source/; \
+		docker run --rm \
+			 -w /irods_plugin_build \
+			 -v ${IRODS_PAM_INTERACTIVE}:/irods_plugin_source:ro \
+             -v ${BUILD}/$$os/irods_pam_interactive:/irods_plugin_build \
+             -v ${PACKAGES}:/irods_packages \
+			 -v ${BUILD}/$$os/packages:/irods_packages \
+             -e VERBOSE=1 \
+            plugin-builder-$$os \
+			/opt/irods-externals/cmake3.21.4-0/bin/cpack -B /irods_packages; \
+	done;
+
 
 builds: ${DEVELOPMENT} ${IRODS_SERVER} ${IRODS_CLIENT}
 	for os in ${BUILDERS}; \
