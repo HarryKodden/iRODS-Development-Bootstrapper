@@ -15,6 +15,10 @@ DEVELOPMENT = ${SOURCE}/development
 IRODS_SERVER = ${SOURCE}/irods_server
 IRODS_CLIENT = ${SOURCE}/irods_client
 
+DEVELOPMENT_BRANCH ?= "main"
+IRODS_SERVER_BRANCH ?= main
+IRODS_CLIENT_BRANCH ?= "main"
+
 all: help
 	echo Done !
 
@@ -35,17 +39,18 @@ help:
 	@echo "make clean    cleans the environment, (might reguire sudo privileges)"
 	@echo
 
+
 ${DEVELOPMENT}:
 	mkdir -p ${DEVELOPMENT}
-	@git clone https://github.com/irods/irods_development_environment ${DEVELOPMENT}
+	@git clone -b ${DEVELOPMENT_BRANCH} https://github.com/irods/irods_development_environment ${DEVELOPMENT}
 
 ${IRODS_SERVER}:
 	mkdir -p ${IRODS_SERVER}
-	@git clone --recursive https://github.com/irods/irods ${IRODS_SERVER}
+	@git clone -b ${IRODS_SERVER_BRANCH} --recursive https://github.com/irods/irods ${IRODS_SERVER}
 
 ${IRODS_CLIENT}:
 	mkdir -p ${IRODS_CLIENT}
-	@git clone https://github.com/irods/irods_client_icommands ${IRODS_CLIENT}
+	@git clone -b ${IRODS_CLIENT_BRANCH} https://github.com/irods/irods_client_icommands ${IRODS_CLIENT}
 
 # Build builders & runners...
 
