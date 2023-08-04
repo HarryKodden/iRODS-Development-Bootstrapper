@@ -32,6 +32,10 @@ help:
 	@echo "For example:"
 	@echo "export DISTRIBUTION=centos7"
 	@echo
+	@echo You can build the iRODS software for specific branches other "origin/main" like this:
+	@echo "export IRODS_SERVER_BRANCH=4-3-stable"
+	@echo "export IRODS_CLIENT_BRANCH=4-3-stable"
+	@echo
 	@echo "Usage:"
 	@echo "make help     shows this message"
 	@echo "make builds   builds complete iRODS stack"

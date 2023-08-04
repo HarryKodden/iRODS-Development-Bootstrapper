@@ -5,9 +5,7 @@ Builds all required packages to develop and run iRODS
 ```
 Maker for iRODS software, by Harry Kodden
 
-Will build into: /home/harry/irods/build for distribution: ubuntu20
-
-Output will be produced into: /home/harry/irods/build/ubuntu20
+Will build into: ./build for distribution: ubuntu20
 
 You can adjust distribution by setting environ variable 'DISTRIBUTION'
 
