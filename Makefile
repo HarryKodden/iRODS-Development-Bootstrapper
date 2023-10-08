@@ -9,7 +9,8 @@ BUILDERS = ${DISTRIBUTION}
 RUNNERS = ${DISTRIBUTION}
 
 SOURCE = ${TOP}/source
-BUILD = ${TOP}/build
+BUILD = /tmp
+RELEASE = ${TOP}
 
 DEVELOPMENT = ${SOURCE}/development
 IRODS_SERVER = ${SOURCE}/irods_server
@@ -57,18 +58,24 @@ ${IRODS_CLIENT}:
 	@git clone -b ${IRODS_CLIENT_BRANCH} https://github.com/irods/irods_client_icommands ${IRODS_CLIENT}
 
 # Build builders & runners...
-
+	
 builds: ${DEVELOPMENT} ${IRODS_SERVER} ${IRODS_CLIENT}
 	for os in ${BUILDERS}; \
 	do \
-		cd ${DEVELOPMENT} && docker build -f irods_core_builder.$$os.Dockerfile -t irods-core-builder-$$os .; \
-		docker run --rm \
+		cd ${DEVELOPMENT} && docker-buildx build -f irods_core_builder.$$os.Dockerfile -t irods-core-builder-$$os .; \
+		cd ${DEVELOPMENT} && docker run --rm \
              		-v ${IRODS_SERVER}:/irods_source:ro \
              		-v ${IRODS_CLIENT}:/icommands_source:ro \
              		-v ${BUILD}/$$os/server:/irods_build \
              		-v ${BUILD}/$$os/client:/icommands_build \
              		-v ${BUILD}/$$os/packages:/irods_packages \
-             		irods-core-builder-$$os -N -j 10 --exclude-unit-tests; \
+             		irods-core-builder-$$os -N -j 1 --exclude-unit-tests; \
+	done;
+
+release: ${DEVELOPMENT}
+	for os in ${BUILDERS}; \
+	do \
+		tar -czf ${RELEASE}/$$os.tgz ${BUILD}/$$os; \
 	done;
 
 runners: ${DEVELOPMENT}
