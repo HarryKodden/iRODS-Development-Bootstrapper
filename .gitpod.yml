@@ -6,7 +6,6 @@
 
 tasks:
   - init: sudo apt install rclone
-  - before: mkdir -p ~/.config/rclone
-  - before: echo $rclone | base64 -d > ~/.config/rclone/rclone.conf
+  - before: mkdir -p ~/.config/rclone && echo $rclone | base64 -d > ~/.config/rclone/rclone.conf
 
 
