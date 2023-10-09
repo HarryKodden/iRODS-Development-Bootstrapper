@@ -69,13 +69,13 @@ builds: ${DEVELOPMENT} ${IRODS_SERVER} ${IRODS_CLIENT}
              		-v ${BUILD}/$$os/server:/irods_build \
              		-v ${BUILD}/$$os/client:/icommands_build \
              		-v ${BUILD}/$$os/packages:/irods_packages \
-             		irods-core-builder-$$os -N -j 1 --exclude-unit-tests; \
+             		irods-core-builder-$$os -N -j 10 --exclude-unit-tests; \
 	done;
 
 publish: builds
 	for os in ${BUILDERS}; \
 	do \
-		tar -czf ${RELEASE}/$$os.tgz ${BUILD}/$$os; \
+		rclone sync ${BUILD}/$$os/packages gitpod:/$$os; \
 	done;
 
 runners: ${DEVELOPMENT}
