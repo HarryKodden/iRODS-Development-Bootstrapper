@@ -9,7 +9,7 @@ BUILDERS = ${DISTRIBUTION}
 RUNNERS = ${DISTRIBUTION}
 
 SOURCE = ${TOP}/source
-BUILD = /tmp
+BUILD = ${TOP}/build
 RELEASE = ${TOP}
 
 DEVELOPMENT = ${SOURCE}/development
@@ -62,7 +62,7 @@ ${IRODS_CLIENT}:
 builds: ${DEVELOPMENT} ${IRODS_SERVER} ${IRODS_CLIENT}
 	for os in ${BUILDERS}; \
 	do \
-		cd ${DEVELOPMENT} && docker-buildx build -f irods_core_builder.$$os.Dockerfile -t irods-core-builder-$$os .; \
+		cd ${DEVELOPMENT} && docker buildx build -f irods_core_builder.$$os.Dockerfile -t irods-core-builder-$$os .; \
 		cd ${DEVELOPMENT} && docker run --rm \
              		-v ${IRODS_SERVER}:/irods_source:ro \
              		-v ${IRODS_CLIENT}:/icommands_source:ro \
