@@ -17,8 +17,8 @@ IRODS_SERVER = ${SOURCE}/irods_server
 IRODS_CLIENT = ${SOURCE}/irods_client
 
 DEVELOPMENT_BRANCH ?= "main"
-IRODS_SERVER_BRANCH ?= main
-IRODS_CLIENT_BRANCH ?= "main"
+IRODS_SERVER_BRANCH ?= "4-3-stable"
+IRODS_CLIENT_BRANCH ?= "4-3-stable"
 
 all: help
 	echo Done !
@@ -72,7 +72,7 @@ builds: ${DEVELOPMENT} ${IRODS_SERVER} ${IRODS_CLIENT}
              		irods-core-builder-$$os -N -j 1 --exclude-unit-tests; \
 	done;
 
-release: ${DEVELOPMENT}
+publish: builds
 	for os in ${BUILDERS}; \
 	do \
 		tar -czf ${RELEASE}/$$os.tgz ${BUILD}/$$os; \
@@ -81,7 +81,7 @@ release: ${DEVELOPMENT}
 runners: ${DEVELOPMENT}
 	for os in ${RUNNERS}; \
 	do \
-		cd ${DEVELOPMENT} && docker build -f irods_runner.$$os.Dockerfile -t irods-runner-$$os .; \
+		cd ${DEVELOPMENT} && docker buildx build -f irods_runner.$$os.Dockerfile -t irods-runner-$$os .; \
 	done;
 
 clean:
