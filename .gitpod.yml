@@ -5,11 +5,8 @@
 # Learn more from ready-to-use templates: https://www.gitpod.io/docs/introduction/getting-started/quickstart
 
 tasks:
-  - name: Install rClone
-    command: sudo apt install rclone
-  - name: Create rClone config folder
-    command: mkdir -p ~/.config/rclone
-  - name: Create rClone config file
-    command: echo $rclone | base64 -d > ~/.config/rclone/rclone.conf
+  - init: sudo apt install rclone
+  - before: mkdir -p ~/.config/rclone
+  - before: echo $rclone | base64 -d > ~/.config/rclone/rclone.conf
 
 
