@@ -66,16 +66,21 @@ builds: ${DEVELOPMENT} ${IRODS_SERVER} ${IRODS_CLIENT}
 		cd ${DEVELOPMENT} && docker run --rm \
              		-v ${IRODS_SERVER}:/irods_source:ro \
              		-v ${IRODS_CLIENT}:/icommands_source:ro \
-             		-v ${BUILD}/$$os/server:/irods_build \
-             		-v ${BUILD}/$$os/client:/icommands_build \
-             		-v ${BUILD}/$$os/packages:/irods_packages \
+             		-v ${BUILD}/$$os:/irods_packages \
              		irods-core-builder-$$os -N -j 10 --exclude-unit-tests; \
 	done;
 
-publish: builds
+publish:
 	for os in ${BUILDERS}; \
 	do \
-		rclone sync ${BUILD}/$$os/packages gitpod:/$$os; \
+		rclone sync ${BUILD}/$$os gitpod:/$$os/packages; \
+		rclone copy ${DEVELOPMENT}/ICAT.sql gitpod:/$$os/; \
+		rclone copy ${DEVELOPMENT}/irods.logrotate gitpod:/$$os/; \
+		rclone copy ${DEVELOPMENT}/irods.rsyslog gitpod:/$$os/; \
+		rclone copy ${DEVELOPMENT}/keep_alive.sh gitpod:/$$os/; \
+		cp ${DEVELOPMENT}/irods_runner.$$os.Dockerfile /tmp/Dockerfile; \
+		rclone copy /tmp/Dockerfile gitpod:/$$os/; \
+		rm /tmp/Dockerfile; \
 	done;
 
 runners: ${DEVELOPMENT}
